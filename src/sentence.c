@@ -72,25 +72,6 @@ void Sentence_free(Sentence sentence)
 	free(sentence);
 }
 
-/**
-void Sentence_freeRecursive(Sentence sentence)
-{
-	printf("Freeing: ");
-	Sentence_print(sentence);
-	printf("\n");
-	if (sentence->type == COMPOUND)
-	{
-		Sentence_freeRecursive(sentence->left.sentence);
-
-		if (sentence->op != NEGATION)
-		{
-			Sentence_freeRecursive(sentence->right.sentence);
-		}
-	}
-
-	free(sentence);
-}
-*/
 
 void Sentence_print(const Sentence sentence)
 {

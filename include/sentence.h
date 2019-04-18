@@ -127,14 +127,6 @@ Sentence Sentence_createNegated(const Sentence toNegate);
 void Sentence_free(Sentence sentence);
 
 /**
- * Frees the given sentence <i>and</i> the left and
- * right buffers, recursively.
- *
- * @param sentence Root sentence to free.
- */
-void Sentence_freeRecursive(Sentence sentence);
-
-/**
  * Recursively prints the sentence such that
  * all inner sentences are also printed.
  *
