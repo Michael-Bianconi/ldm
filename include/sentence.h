@@ -53,7 +53,7 @@ enum SentenceOperator
 union SentenceBuffer
 {
 	char variable;
-	struct Sentence_s*;
+	struct Sentence_s* sentence;
 };
 
 /// ===========================================================================
@@ -144,4 +144,4 @@ void Sentence_print(const Sentence sentence);
 
 
 
-#endif;
+#endif

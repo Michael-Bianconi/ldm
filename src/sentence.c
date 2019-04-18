@@ -10,6 +10,28 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+/// ===========================================================================
+/// SentenceOperator function definitions
+/// ===========================================================================
+
+char* SentenceOperator_toString(SentenceOperator op)
+{
+	switch (op)
+	{
+		case NO_OP: return "";
+		case AND: return "&";
+		case OR: return "v";
+		case NEGATION: return "~";
+		case MATERIAL_CONDITIONAL: return ">";
+		case MATERIAL_BICONDITIONAL: return "=";
+		default: return "?";
+	}
+}
+
+/// ===========================================================================
+/// Sentence function definitions
+/// ===========================================================================
+
 Sentence Sentence_createAtomic(const char var)
 {
 	Sentence sentence = malloc(sizeof(struct Sentence_s));
@@ -31,6 +53,7 @@ Sentence Sentence_createCompound(
 	sentence->op = op;
 	sentence->left.sentence = left;
 	sentence->right.sentence = right;
+	return sentence;
 }
 
 Sentence Sentence_createNegated(const Sentence toNegate)
@@ -49,8 +72,12 @@ void Sentence_free(Sentence sentence)
 	free(sentence);
 }
 
+/**
 void Sentence_freeRecursive(Sentence sentence)
 {
+	printf("Freeing: ");
+	Sentence_print(sentence);
+	printf("\n");
 	if (sentence->type == COMPOUND)
 	{
 		Sentence_freeRecursive(sentence->left.sentence);
@@ -63,6 +90,7 @@ void Sentence_freeRecursive(Sentence sentence)
 
 	free(sentence);
 }
+*/
 
 void Sentence_print(const Sentence sentence)
 {
@@ -70,14 +98,14 @@ void Sentence_print(const Sentence sentence)
 	{
 		printf("~");
 		Sentence_print(sentence->left.sentence);
-		fflush();
+		fflush(stdout);
 		return;
 	}
 
 	if (sentence->type == ATOMIC)
 	{
-		printf(sentence->left.variable);
-		fflush();
+		printf("%c",sentence->left.variable);
+		fflush(stdout);
 		return;
 	}
 
@@ -85,9 +113,9 @@ void Sentence_print(const Sentence sentence)
 	{
 		printf("(");
 		Sentence_print(sentence->left.sentence);
-		printf(" %c ", SentenceOperator_toString(sentence->op));
-		Sentence_print(sentece->right.sentence);
+		printf(" %s ", SentenceOperator_toString(sentence->op));
+		Sentence_print(sentence->right.sentence);
 		printf(")");
-		fflush();
+		fflush(stdout);
 	}
 }
