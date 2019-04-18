@@ -6,6 +6,7 @@
  */
 
 #include "sentence.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -50,4 +51,13 @@ void SentenceSet_add(SentenceSet set, const Sentence sentence)
 
 	// Add sentence to the set
 	set->sentences[set->size++] = sentence;
+}
+
+void SentenceSet_print(const SentenceSet set)
+{
+	for (size_t n = 0; n < set->size; n++)
+	{
+		Sentence_print(set->sentences[n]);
+		printf("\n");
+	}
 }

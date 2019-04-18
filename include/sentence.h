@@ -195,6 +195,12 @@ void Sentence_print(const Sentence sentence);
  */
 void SentenceSet_add(SentenceSet set, const Sentence sentence);
 
+/**
+ * Prints every sentence in the set.
+ *
+ * @param set Set to print.
+ */
+void SentenceSet_print(const SentenceSet set);
 
 
 #endif
