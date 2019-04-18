@@ -52,7 +52,7 @@ enum SentenceOperator
  */
 union SentenceBuffer
 {
-	char variable;
+	char* variable;
 	struct Sentence_s* sentence;
 };
 
@@ -82,7 +82,7 @@ typedef union SentenceBuffer SentenceBuffer;
 typedef struct Sentence_s* Sentence;
 
 /// ===========================================================================
-/// Function declarations
+/// Function declarations - Constructors
 /// ===========================================================================
 
 /**
@@ -92,7 +92,7 @@ typedef struct Sentence_s* Sentence;
  * @param var Variable to set.
  * @return Returns a malloc'd Sentence.
  */
-Sentence Sentence_createAtomic(const char var);
+Sentence Sentence_createAtomic(const char* var);
 
 /**
  * Creates a compound sentence.
@@ -118,6 +118,10 @@ Sentence Sentence_createCompound(
  */
 Sentence Sentence_createNegated(const Sentence toNegate);
 
+/// ===========================================================================
+/// Function declarations - Destructors
+/// ===========================================================================
+
 /**
  * Frees the given sentence but <i>not</i> it's left and right
  * buffers.
@@ -126,6 +130,16 @@ Sentence Sentence_createNegated(const Sentence toNegate);
  */
 void Sentence_free(Sentence sentence);
 
+/// ===========================================================================
+/// Function declarations - Accessors
+/// ===========================================================================
+
+
+
+/// ===========================================================================
+/// Function declarations - Utility
+/// ===========================================================================
+
 /**
  * Recursively prints the sentence such that
  * all inner sentences are also printed.
@@ -133,7 +147,5 @@ void Sentence_free(Sentence sentence);
  * @param sentence Sentence to print.
  */
 void Sentence_print(const Sentence sentence);
-
-
 
 #endif

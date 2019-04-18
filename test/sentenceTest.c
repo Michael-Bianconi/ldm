@@ -8,14 +8,15 @@
 #include "sentence.h"
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 static void _TEST_CREATE_ATOMIC()
 {
-	Sentence atomic = Sentence_createAtomic('a');
+	Sentence atomic = Sentence_createAtomic("a");
 	assert(atomic->type == ATOMIC);
 	assert(atomic->op == NO_OP);
-	assert(atomic->right.variable == '\0');
-	assert(atomic->left.variable == 'a');
+	assert(strcmp(atomic->right.variable, "\0") == 0);
+	assert(strcmp(atomic->left.variable, "a") == 0);
 	Sentence_free(atomic);
 
 	printf("_TEST_CREATE_ATOMIC() : SUCCESS\n");
@@ -23,7 +24,7 @@ static void _TEST_CREATE_ATOMIC()
 
 static void _TEST_CREATE_NEGATED()
 {
-	Sentence atomic = Sentence_createAtomic('a');
+	Sentence atomic = Sentence_createAtomic("a");
 	Sentence negated = Sentence_createNegated(atomic);
 	assert(negated->type == COMPOUND);
 	assert(negated->op == NEGATION);
@@ -37,7 +38,7 @@ static void _TEST_CREATE_NEGATED()
 
 static void _TEST_CREATE_COMPOUND()
 {
-	Sentence atomic = Sentence_createAtomic('a');
+	Sentence atomic = Sentence_createAtomic("a");
 	Sentence negated = Sentence_createNegated(atomic);
 	Sentence compound = Sentence_createCompound(OR, atomic, negated);
 	assert(compound->type == COMPOUND);
@@ -53,13 +54,13 @@ static void _TEST_CREATE_COMPOUND()
 
 static void _TEST_BIG_COMPOUND()
 {
-	Sentence atom1 = Sentence_createAtomic('a');
-	Sentence atom2 = Sentence_createAtomic('b');
+	Sentence atom1 = Sentence_createAtomic("a1");
+	Sentence atom2 = Sentence_createAtomic("b2");
 	Sentence neg1 = Sentence_createNegated(atom1);
 	printf("reached 1\n");
 	Sentence comp1 = Sentence_createCompound(AND, atom2, neg1);
 	printf("reached 3\n");
-	Sentence atom3 = Sentence_createAtomic('c');
+	Sentence atom3 = Sentence_createAtomic("c3");
 	printf("reached 2\n");
 	Sentence comp2 = Sentence_createCompound(OR, atom3, comp1);
 	Sentence_print(comp2);

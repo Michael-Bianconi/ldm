@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 /// ===========================================================================
 /// SentenceOperator function definitions
@@ -32,13 +33,14 @@ char* SentenceOperator_toString(SentenceOperator op)
 /// Sentence function definitions
 /// ===========================================================================
 
-Sentence Sentence_createAtomic(const char var)
+Sentence Sentence_createAtomic(const char* var)
 {
 	Sentence sentence = malloc(sizeof(struct Sentence_s));
 	sentence->type = ATOMIC;
 	sentence->op = NO_OP;
-	sentence->left.variable = var;
-	sentence->right.variable = '\0';
+	sentence->left.variable = malloc(strlen(var) + 1);
+	strcpy(sentence->left.variable, var);
+	sentence->right.variable = "\0";
 
 	return sentence;
 }
@@ -69,6 +71,7 @@ Sentence Sentence_createNegated(const Sentence toNegate)
 
 void Sentence_free(Sentence sentence)
 {
+	if (sentence->type == ATOMIC) free(sentence->left.variable);
 	free(sentence);
 }
 
@@ -85,7 +88,7 @@ void Sentence_print(const Sentence sentence)
 
 	if (sentence->type == ATOMIC)
 	{
-		printf("%c",sentence->left.variable);
+		printf("%s",sentence->left.variable);
 		fflush(stdout);
 		return;
 	}
