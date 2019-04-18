@@ -6,6 +6,8 @@
 #ifndef SENTENCE_H
 #define SENTENCE_H
 
+#include <stdint.h>
+
 /// ===========================================================================
 /// Structure declarations
 /// ===========================================================================
@@ -90,7 +92,7 @@ typedef struct Sentence_s* Sentence;
  * @param var Variable to set.
  * @return Returns a malloc'd Sentence.
  */
-Sentence Sentence_createAtomic(char var);
+Sentence Sentence_createAtomic(const char var);
 
 /**
  * Creates a compound sentence.
@@ -101,9 +103,9 @@ Sentence Sentence_createAtomic(char var);
  * @return Returns a malloc'd sentence.
  */
 Sentence Sentence_createCompound(
-	SentenceOperator op,
-	Sentence left,
-	Sentence right);
+	const SentenceOperator op,
+	const Sentence left,
+	const Sentence right);
 
 /**
  * Constructs a negated sentence, similar to an atomic sentence but
@@ -114,7 +116,7 @@ Sentence Sentence_createCompound(
  * @return Returns a new negated sentence with the given sentence
  *         in the left buffer.
  */
-Sentence Sentence_createNegated(Sentence toNegate);
+Sentence Sentence_createNegated(const Sentence toNegate);
 
 /**
  * Frees the given sentence but <i>not</i> it's left and right
@@ -131,6 +133,14 @@ void Sentence_free(Sentence sentence);
  * @param sentence Root sentence to free.
  */
 void Sentence_freeRecursive(Sentence sentence);
+
+/**
+ * Recursively prints the sentence such that
+ * all inner sentences are also printed.
+ *
+ * @param sentence Sentence to print.
+ */
+void Sentence_print(const Sentence sentence);
 
 
 
