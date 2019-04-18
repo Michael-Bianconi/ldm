@@ -10,6 +10,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+/// ===========================================================================
+/// Function definitions - Constructors
+/// ===========================================================================
+
 SentenceSet SentenceSet_create()
 {
 	SentenceSet set = malloc(sizeof(struct SentenceSet_s));
@@ -18,6 +22,10 @@ SentenceSet SentenceSet_create()
 	set->sentences = calloc(SENTENCESET_BUFFER, sizeof(Sentence));
 	return set;
 }
+
+/// ===========================================================================
+/// Function definitions - Destructors
+/// ===========================================================================
 
 void SentenceSet_free(SentenceSet set)
 {
@@ -29,6 +37,10 @@ void SentenceSet_free(SentenceSet set)
 	free(set->sentences);
 	free(set);
 }
+
+/// ===========================================================================
+/// Function definitions - Accessors
+/// ===========================================================================
 
 void SentenceSet_add(SentenceSet set, const Sentence sentence)
 {
@@ -52,6 +64,10 @@ void SentenceSet_add(SentenceSet set, const Sentence sentence)
 	// Add sentence to the set
 	set->sentences[set->size++] = sentence;
 }
+
+/// ===========================================================================
+/// Function definitions - Utility
+/// ===========================================================================
 
 void SentenceSet_print(const SentenceSet set)
 {

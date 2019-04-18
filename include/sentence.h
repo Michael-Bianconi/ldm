@@ -187,6 +187,15 @@ uint8_t Sentence_equals(const Sentence a, const Sentence b);
 void Sentence_print(const Sentence sentence);
 
 /**
+ * Generate a Sentence from the given character array.
+ *
+ * @param in Character array to read from.
+ * @param set Set buffer, should be NULL or uninitialized.
+ * @return Returns the <i>root</i> sentence.
+ */
+Sentence Sentence_parseString(const char* in, SentenceSet* set);
+
+/**
  * Adds the Sentence to the set, if it doesn't already exist in
  * the set.
  *
