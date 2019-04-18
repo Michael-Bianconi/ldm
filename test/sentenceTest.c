@@ -12,28 +12,54 @@
 
 static void _TEST_CREATE_ATOMIC()
 {
-	Sentence atomic = Sentence_createAtomic("a",0);
+	// Creating an atomic sentence
+	Sentence atomic = Sentence_createAtomic("a", 0);
 	assert(atomic->type == ATOMIC);
 	assert(atomic->op == NO_OP);
+	assert(atomic->negated == 0);
 	assert(strcmp(atomic->right.variable, "\0") == 0);
 	assert(strcmp(atomic->left.variable, "a") == 0);
 	Sentence_free(atomic);
+
+	// Creating a negated atomic sentence
+	Sentence neg = Sentence_createAtomic("b", 1);
+	assert(neg->type == ATOMIC);
+	assert(neg->op == NO_OP);
+	assert(neg->negated == 1);
+	assert(strcmp(neg->right.variable, "\0") == 0);
+	assert(strcmp(neg->left.variable, "b") == 0);
+	Sentence_free(neg);
 
 	printf("_TEST_CREATE_ATOMIC() : SUCCESS\n");
 }
 
 static void _TEST_CREATE_COMPOUND()
 {
+	// Creating some atomic sentences
 	Sentence atomic = Sentence_createAtomic("a",0);
-	Sentence negated = Sentence_createAtomic("b",1);
-	Sentence compound = Sentence_createCompound(OR, atomic, negated,0);
+	Sentence neg = Sentence_createAtomic("b",1);
+
+	// Creating the compound sentence
+	Sentence compound = Sentence_createCompound(OR, atomic, neg, 0);
 	assert(compound->type == COMPOUND);
 	assert(compound->op == OR);
 	assert(compound->left.sentence == atomic);
-	assert(compound->right.sentence == negated);
+	assert(compound->right.sentence == neg);
+	assert(compound->negated == 0);
+
+	// Creating a negated compound sentence
+	Sentence compound2 = Sentence_createCompound(OR, atomic, neg, 1);
+	assert(compound2->type == COMPOUND);
+	assert(compound2->op == OR);
+	assert(compound2->left.sentence == atomic);
+	assert(compound2->right.sentence == neg);
+	assert(compound2->negated == 1);
+
+	// Free resources
 	Sentence_free(atomic);
-	Sentence_free(negated);
+	Sentence_free(neg);
 	Sentence_free(compound);
+	Sentence_free(compound2);
 
 	printf("_TEST_CREATE_COMPOUND() : SUCCESS\n");
 }
@@ -79,6 +105,48 @@ static void _TEST_SET()
 
 }
 
+static void _TEST_SENTENCE_EQUALS()
+{
+	// Create standard atomic sentences
+	Sentence a1 = Sentence_createAtomic("a", 0);
+	Sentence a2 = Sentence_createAtomic("a", 0);
+	Sentence b1 = Sentence_createAtomic("b", 1);
+	Sentence b2 = Sentence_createAtomic("b", 1);
+
+	assert(Sentence_equals(a1, a2));
+	assert(Sentence_equals(a2, a1));
+	assert(Sentence_equals(b1, b2));
+	assert(Sentence_equals(b2, b1));
+	assert(!Sentence_equals(a1, b1));
+	assert(!Sentence_equals(b2, a2));
+
+	// Create some compound sentences
+	Sentence c1 = Sentence_createCompound(AND, a1, b1, 0);
+	Sentence c2 = Sentence_createCompound(AND, a1, b1, 0);
+	Sentence d1 = Sentence_createCompound(OR, a2, b1, 1);
+	Sentence d2 = Sentence_createCompound(MATERIAL_CONDITIONAL, b1, b1, 0);
+
+	assert(Sentence_equals(c1, c2));
+	assert(Sentence_equals(c2, c1));
+	assert(Sentence_equals(c1, c1));
+	assert(Sentence_equals(c2, c2));
+	assert(!Sentence_equals(d1, b1));
+	assert(!Sentence_equals(d2, c1));
+
+	// Free resources
+	Sentence_free(a1);
+	Sentence_free(a2);
+	Sentence_free(b1);
+	Sentence_free(b2);
+	Sentence_free(c1);
+	Sentence_free(c2);
+	Sentence_free(d1);
+	Sentence_free(d2);
+
+	printf("_TEST_SENTENCE_EQUALS() : SUCCESS\n");
+
+}
+
 int main(int argc, char** argv)
 {
 	(void) argc;
@@ -87,5 +155,6 @@ int main(int argc, char** argv)
 	_TEST_CREATE_COMPOUND();
 	_TEST_BIG_COMPOUND();
 	_TEST_SET();
+	_TEST_SENTENCE_EQUALS();
 
 }
