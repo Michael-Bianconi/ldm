@@ -6,7 +6,13 @@
 #ifndef SENTENCE_H
 #define SENTENCE_H
 
+#include <stdlib.h>
 #include <stdint.h>
+
+/// ===========================================================================
+/// Definitions
+/// ===========================================================================
+#define SENTENCESET_BUFFER 5
 
 /// ===========================================================================
 /// Structure declarations
@@ -72,6 +78,18 @@ struct Sentence_s
 	union SentenceBuffer right;
 };
 
+/**
+ * Since sentences are essentially graphs, freeing them correctly
+ * can be difficult. Each time a Sentence is created, add it to
+ * a set, then free the whole set at once using SentenceSet_free().
+ */
+struct SentenceSet_s
+{
+	size_t size;
+	size_t buffer;
+	struct Sentence_s** sentences;
+};
+
 /// ===========================================================================
 /// Typedefs
 /// ===========================================================================
@@ -80,6 +98,7 @@ typedef enum SentenceType SentenceType;
 typedef enum SentenceOperator SentenceOperator;
 typedef union SentenceBuffer SentenceBuffer;
 typedef struct Sentence_s* Sentence;
+typedef struct SentenceSet_s* SentenceSet;
 
 /// ===========================================================================
 /// Function declarations - Constructors
@@ -118,6 +137,14 @@ Sentence Sentence_createCompound(
  */
 Sentence Sentence_createNegated(const Sentence toNegate);
 
+/**
+ * Creates a new SentenceSet with an arbitrary length buffer
+ * defined by SENTENCESET_BUFFER.
+ *
+ * @return Returns a malloc'd SentenceSet.
+ */
+SentenceSet SentenceSet_create();
+
 /// ===========================================================================
 /// Function declarations - Destructors
 /// ===========================================================================
@@ -130,9 +157,26 @@ Sentence Sentence_createNegated(const Sentence toNegate);
  */
 void Sentence_free(Sentence sentence);
 
+/**
+ * Frees all sentences (and the set itself).
+ *
+ * @param set Set to free.
+ */
+void SentenceSet_free(SentenceSet set);
+
 /// ===========================================================================
 /// Function declarations - Utility
 /// ===========================================================================
+
+/**
+ * Recursively checks if the two sentences have the same
+ * structure and children.
+ *
+ * @param a First Sentence.
+ * @param b Second Sentence.
+ * @return Returns 1 if equals, 0 otherwise.
+ */
+uint8_t Sentence_equals(const Sentence a, const Sentence b);
 
 /**
  * Recursively prints the sentence such that
@@ -141,5 +185,16 @@ void Sentence_free(Sentence sentence);
  * @param sentence Sentence to print.
  */
 void Sentence_print(const Sentence sentence);
+
+/**
+ * Adds the Sentence to the set, if it doesn't already exist in
+ * the set.
+ *
+ * @param set Set to add to.
+ * @param sentence Sentence being added.
+ */
+void SentenceSet_add(SentenceSet set, const Sentence sentence);
+
+
 
 #endif

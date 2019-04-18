@@ -75,6 +75,36 @@ void Sentence_free(Sentence sentence)
 	free(sentence);
 }
 
+/// ===========================================================================
+/// Function definitions - Utility
+/// ===========================================================================
+
+uint8_t Sentence_equals(const Sentence a, const Sentence b)
+{
+	// Check for type and operator
+	if (a->type != b->type || a->op != b->op)
+		return 0;
+
+	// Check for atomic sentences
+	else if (a->type == ATOMIC)
+	{
+		if (strcmp(a->left.variable, b->left.variable)!=0)
+			return 0;
+	}
+	else
+	{
+		// Check left sentence (always filled)
+		if (!Sentence_equals(a->left.sentence, b->left.sentence))
+			return 0;
+		// Not unary operator, check right sentence
+		if (a->op != NEGATION)
+			return Sentence_equals(a->right.sentence, b->right.sentence);
+
+	}
+
+	return 1;
+}
+
 
 void Sentence_print(const Sentence sentence)
 {

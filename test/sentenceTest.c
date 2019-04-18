@@ -57,22 +57,40 @@ static void _TEST_BIG_COMPOUND()
 	Sentence atom1 = Sentence_createAtomic("a1");
 	Sentence atom2 = Sentence_createAtomic("b2");
 	Sentence neg1 = Sentence_createNegated(atom1);
-	printf("reached 1\n");
 	Sentence comp1 = Sentence_createCompound(AND, atom2, neg1);
-	printf("reached 3\n");
 	Sentence atom3 = Sentence_createAtomic("c3");
-	printf("reached 2\n");
 	Sentence comp2 = Sentence_createCompound(OR, atom3, comp1);
-	Sentence_print(comp2);
-	printf("\n");
+
 	Sentence_free(atom1);
 	Sentence_free(atom2);
 	Sentence_free(atom3);
 	Sentence_free(neg1);
 	Sentence_free(comp1);
 	Sentence_free(comp2);
+
+	printf("_TEST_BIG_COMPOUND() : SUCCESS\n");
 }
 
+static void _TEST_SET()
+{
+	Sentence atom1 = Sentence_createAtomic("a1");
+	Sentence atom2 = Sentence_createAtomic("b2");
+	Sentence neg1 = Sentence_createNegated(atom1);
+	Sentence comp1 = Sentence_createCompound(AND, atom2, neg1);
+	Sentence atom3 = Sentence_createAtomic("c3");
+	Sentence comp2 = Sentence_createCompound(OR, atom3, comp1);
+	SentenceSet set = SentenceSet_create();
+	SentenceSet_add(set, atom1);
+	SentenceSet_add(set, atom2);
+	SentenceSet_add(set, neg1);
+	SentenceSet_add(set, comp1);
+	SentenceSet_add(set, comp2);
+	SentenceSet_add(set, atom3);
+	SentenceSet_free(set);
+
+	printf("_TEST_SET() : SUCCESS\n");
+
+}
 
 int main(int argc, char** argv)
 {
@@ -82,5 +100,7 @@ int main(int argc, char** argv)
 	_TEST_CREATE_NEGATED();
 	_TEST_CREATE_COMPOUND();
 	_TEST_BIG_COMPOUND();
+	//_TEST_EQUALS();
+	_TEST_SET();
 
 }
