@@ -43,7 +43,6 @@ enum SentenceOperator
 	NO_OP,
 	AND,
 	OR,
-	NEGATION,
 	MATERIAL_CONDITIONAL,
 	MATERIAL_BICONDITIONAL
 };
@@ -67,11 +66,12 @@ union SentenceBuffer
 /// ===========================================================================
 
 /**
- * Note: sentences that only make use of one buffer (atomic sentences and
- * negated sentences) will always only use the left buffer.
+ * Note: sentences that only make use of one buffer (atomic sentences)
+ * will always only use the left buffer.
  */
 struct Sentence_s
 {
+	uint8_t negated;
 	enum SentenceType type;
 	enum SentenceOperator op;
 	union SentenceBuffer left;
@@ -109,9 +109,10 @@ typedef struct SentenceSet_s* SentenceSet;
  * in the left buffer.
  *
  * @param var Variable to set.
+ * @param negated 1 if sentence is negated, 0 otherwise.
  * @return Returns a malloc'd Sentence.
  */
-Sentence Sentence_createAtomic(const char* var);
+Sentence Sentence_createAtomic(const char* var, const uint8_t negated);
 
 /**
  * Creates a compound sentence.
@@ -119,23 +120,14 @@ Sentence Sentence_createAtomic(const char* var);
  * @param op Operator to use. Should not be NEGATION.
  * @param left The sentence to store in the left buffer.
  * @param right The sentence to store in the right buffer.
+ * @param negated 1 if the sentence is negated, 0 otherwise.
  * @return Returns a malloc'd sentence.
  */
 Sentence Sentence_createCompound(
 	const SentenceOperator op,
 	const Sentence left,
-	const Sentence right);
-
-/**
- * Constructs a negated sentence, similar to an atomic sentence but
- * with a sentence instead of a variable. Note: this will
- * create a <i>new</i> sentence without altering the given one.
- *
- * @param toNegate The sentence to negate.
- * @return Returns a new negated sentence with the given sentence
- *         in the left buffer.
- */
-Sentence Sentence_createNegated(const Sentence toNegate);
+	const Sentence right,
+	const uint8_t negated);
 
 /**
  * Creates a new SentenceSet with an arbitrary length buffer
@@ -163,6 +155,29 @@ void Sentence_free(Sentence sentence);
  * @param set Set to free.
  */
 void SentenceSet_free(SentenceSet set);
+
+/// ===========================================================================
+/// Function declarations - Accessors
+/// ===========================================================================
+
+/**
+ * Adds the Sentence to the set, if it doesn't already exist in
+ * the set.
+ *
+ * @param set Set to add to.
+ * @param sentence Sentence being added.
+ */
+void SentenceSet_add(SentenceSet set, const Sentence sentence);
+
+/**
+ * Checks if the given sentence exists in the set, either directly (having
+ * the same address) or indirectly (having the same components).
+ *
+ * @param set Set to check.
+ * @param sentence Sentence to check.
+ * @return 1 if exists, 0 otherwise.
+ */
+uint8_t SentenceSet_contains(const SentenceSet set, const Sentence sentence);
 
 /// ===========================================================================
 /// Function declarations - Utility
@@ -194,15 +209,6 @@ void Sentence_print(const Sentence sentence);
  * @return Returns the <i>root</i> sentence.
  */
 Sentence Sentence_parseString(const char* in, SentenceSet* set);
-
-/**
- * Adds the Sentence to the set, if it doesn't already exist in
- * the set.
- *
- * @param set Set to add to.
- * @param sentence Sentence being added.
- */
-void SentenceSet_add(SentenceSet set, const Sentence sentence);
 
 /**
  * Prints every sentence in the set.

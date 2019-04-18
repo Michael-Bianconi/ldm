@@ -12,7 +12,7 @@
 
 static void _TEST_CREATE_ATOMIC()
 {
-	Sentence atomic = Sentence_createAtomic("a");
+	Sentence atomic = Sentence_createAtomic("a",0);
 	assert(atomic->type == ATOMIC);
 	assert(atomic->op == NO_OP);
 	assert(strcmp(atomic->right.variable, "\0") == 0);
@@ -22,25 +22,11 @@ static void _TEST_CREATE_ATOMIC()
 	printf("_TEST_CREATE_ATOMIC() : SUCCESS\n");
 }
 
-static void _TEST_CREATE_NEGATED()
-{
-	Sentence atomic = Sentence_createAtomic("a");
-	Sentence negated = Sentence_createNegated(atomic);
-	assert(negated->type == COMPOUND);
-	assert(negated->op == NEGATION);
-	assert(negated->right.sentence == NULL);
-	assert(negated->left.sentence == atomic);
-	Sentence_free(atomic);
-	Sentence_free(negated);
-
-	printf("_TEST_CREATE_NEGATED() : SUCCESS\n");
-}
-
 static void _TEST_CREATE_COMPOUND()
 {
-	Sentence atomic = Sentence_createAtomic("a");
-	Sentence negated = Sentence_createNegated(atomic);
-	Sentence compound = Sentence_createCompound(OR, atomic, negated);
+	Sentence atomic = Sentence_createAtomic("a",0);
+	Sentence negated = Sentence_createAtomic("b",1);
+	Sentence compound = Sentence_createCompound(OR, atomic, negated,0);
 	assert(compound->type == COMPOUND);
 	assert(compound->op == OR);
 	assert(compound->left.sentence == atomic);
@@ -54,12 +40,12 @@ static void _TEST_CREATE_COMPOUND()
 
 static void _TEST_BIG_COMPOUND()
 {
-	Sentence atom1 = Sentence_createAtomic("a1");
-	Sentence atom2 = Sentence_createAtomic("b2");
-	Sentence neg1 = Sentence_createNegated(atom1);
-	Sentence comp1 = Sentence_createCompound(AND, atom2, neg1);
-	Sentence atom3 = Sentence_createAtomic("c3");
-	Sentence comp2 = Sentence_createCompound(OR, atom3, comp1);
+	Sentence atom1 = Sentence_createAtomic("a1",0);
+	Sentence atom2 = Sentence_createAtomic("b2",0);
+	Sentence neg1 = Sentence_createAtomic("c3",1);
+	Sentence comp1 = Sentence_createCompound(AND, atom2, neg1,0);
+	Sentence atom3 = Sentence_createAtomic("d4",0);
+	Sentence comp2 = Sentence_createCompound(OR, atom3, comp1,0);
 
 	Sentence_free(atom1);
 	Sentence_free(atom2);
@@ -73,12 +59,12 @@ static void _TEST_BIG_COMPOUND()
 
 static void _TEST_SET()
 {
-	Sentence atom1 = Sentence_createAtomic("a1");
-	Sentence atom2 = Sentence_createAtomic("b2");
-	Sentence neg1 = Sentence_createNegated(atom1);
-	Sentence comp1 = Sentence_createCompound(AND, atom2, neg1);
-	Sentence atom3 = Sentence_createAtomic("c3");
-	Sentence comp2 = Sentence_createCompound(OR, atom3, comp1);
+	Sentence atom1 = Sentence_createAtomic("a",0);
+	Sentence atom2 = Sentence_createAtomic("b",0);
+	Sentence neg1 = Sentence_createAtomic("c",1);
+	Sentence comp1 = Sentence_createCompound(AND, atom2, neg1,0);
+	Sentence atom3 = Sentence_createAtomic("d",0);
+	Sentence comp2 = Sentence_createCompound(OR, atom3, comp1,1);
 	SentenceSet set = SentenceSet_create();
 	SentenceSet_add(set, atom1);
 	SentenceSet_add(set, atom2);
@@ -86,6 +72,7 @@ static void _TEST_SET()
 	SentenceSet_add(set, comp1);
 	SentenceSet_add(set, comp2);
 	SentenceSet_add(set, atom3);
+	SentenceSet_print(set);
 	SentenceSet_free(set);
 
 	printf("_TEST_SET() : SUCCESS\n");
@@ -97,10 +84,8 @@ int main(int argc, char** argv)
 	(void) argc;
 	(void) argv;
 	_TEST_CREATE_ATOMIC();
-	_TEST_CREATE_NEGATED();
 	_TEST_CREATE_COMPOUND();
 	_TEST_BIG_COMPOUND();
-	//_TEST_EQUALS();
 	_TEST_SET();
 
 }

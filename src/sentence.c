@@ -22,7 +22,6 @@ char* SentenceOperator_toString(SentenceOperator op)
 		case NO_OP: return "";
 		case AND: return "&";
 		case OR: return "v";
-		case NEGATION: return "~";
 		case MATERIAL_CONDITIONAL: return ">";
 		case MATERIAL_BICONDITIONAL: return "=";
 		default: return "?";
@@ -33,7 +32,7 @@ char* SentenceOperator_toString(SentenceOperator op)
 /// Sentence function definitions
 /// ===========================================================================
 
-Sentence Sentence_createAtomic(const char* var)
+Sentence Sentence_createAtomic(const char* var, const uint8_t negated)
 {
 	Sentence sentence = malloc(sizeof(struct Sentence_s));
 	sentence->type = ATOMIC;
@@ -41,6 +40,7 @@ Sentence Sentence_createAtomic(const char* var)
 	sentence->left.variable = malloc(strlen(var) + 1);
 	strcpy(sentence->left.variable, var);
 	sentence->right.variable = "\0";
+	sentence->negated = negated;
 
 	return sentence;
 }
@@ -48,24 +48,15 @@ Sentence Sentence_createAtomic(const char* var)
 Sentence Sentence_createCompound(
 	const SentenceOperator op,
 	const Sentence left,
-	const Sentence right)
+	const Sentence right,
+	const uint8_t negated)
 {
 	Sentence sentence = malloc(sizeof(struct Sentence_s));
 	sentence->type = COMPOUND;
 	sentence->op = op;
 	sentence->left.sentence = left;
 	sentence->right.sentence = right;
-	return sentence;
-}
-
-Sentence Sentence_createNegated(const Sentence toNegate)
-{
-	Sentence sentence = malloc(sizeof(struct Sentence_s));
-	sentence->type = COMPOUND;
-	sentence->op = NEGATION;
-	sentence->left.sentence = toNegate;
-	sentence->right.sentence = NULL;
-
+	sentence->negated = negated;
 	return sentence;
 }
 
@@ -82,7 +73,7 @@ void Sentence_free(Sentence sentence)
 uint8_t Sentence_equals(const Sentence a, const Sentence b)
 {
 	// Check for type and operator
-	if (a->type != b->type || a->op != b->op)
+	if (a->type != b->type || a->op != b->op || a->negated != b->negated)
 		return 0;
 
 	// Check for atomic sentences
@@ -93,12 +84,11 @@ uint8_t Sentence_equals(const Sentence a, const Sentence b)
 	}
 	else
 	{
-		// Check left sentence (always filled)
+		// Check left sentence and right sentences
 		if (!Sentence_equals(a->left.sentence, b->left.sentence))
 			return 0;
-		// Not unary operator, check right sentence
-		if (a->op != NEGATION)
-			return Sentence_equals(a->right.sentence, b->right.sentence);
+		if (!Sentence_equals(a->right.sentence, b->right.sentence))
+			return 0;
 
 	}
 
@@ -108,12 +98,10 @@ uint8_t Sentence_equals(const Sentence a, const Sentence b)
 
 void Sentence_print(const Sentence sentence)
 {
-	if (sentence->op == NEGATION)
+	if (sentence->negated)
 	{
 		printf("~");
-		Sentence_print(sentence->left.sentence);
 		fflush(stdout);
-		return;
 	}
 
 	if (sentence->type == ATOMIC)
