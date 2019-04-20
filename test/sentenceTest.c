@@ -147,6 +147,42 @@ static void _TEST_SENTENCE_EQUALS()
 
 }
 
+static void _TEST_SENTENCESET_CONTAINS()
+{
+	// Create standard atomic sentences
+	Sentence a1 = Sentence_createAtomic("a", 0);
+	Sentence a2 = Sentence_createAtomic("a", 0);
+	Sentence b1 = Sentence_createAtomic("b", 1);
+	Sentence b2 = Sentence_createAtomic("b", 1);
+
+	// Create some compound sentences
+	Sentence c1 = Sentence_createCompound(AND, a1, b1, 0);
+	Sentence c2 = Sentence_createCompound(AND, a1, b1, 0);
+	Sentence d1 = Sentence_createCompound(OR, a2, b1, 1);
+	Sentence d2 = Sentence_createCompound(MATERIAL_CONDITIONAL, b1, b1, 0);
+
+	SentenceSet set = SentenceSet_create();
+	SentenceSet_add(set,a1);
+	SentenceSet_add(set,a2);
+	SentenceSet_add(set,b1);
+	SentenceSet_add(set,b2);
+	SentenceSet_add(set,c1);
+	SentenceSet_add(set,c2);
+	SentenceSet_add(set,d1);
+
+	assert(SentenceSet_contains(set, a1));
+	assert(SentenceSet_contains(set, a2));
+	assert(SentenceSet_contains(set, b2));
+	assert(SentenceSet_contains(set, c1));
+	assert(SentenceSet_contains(set, d1));
+	assert(!SentenceSet_contains(set, d2));
+
+	SentenceSet_free(set);
+	Sentence_free(d2);
+
+	printf("_TEST_SENTENCESET_CONTAINS() : SUCCESS\n");
+}
+
 int main(int argc, char** argv)
 {
 	(void) argc;
@@ -156,5 +192,6 @@ int main(int argc, char** argv)
 	_TEST_BIG_COMPOUND();
 	_TEST_SET();
 	_TEST_SENTENCE_EQUALS();
+	_TEST_SENTENCESET_CONTAINS();
 
 }

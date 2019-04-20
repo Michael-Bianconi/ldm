@@ -70,7 +70,7 @@ uint8_t SentenceSet_contains(const SentenceSet set, const Sentence sentence)
 	for (size_t n = 0; n < set->size; n++)
 	{
 		Sentence other = set->sentences[n];
-		if (sentence == other || Sentence_equals(other, n)) return 1;
+		if (sentence == other || Sentence_equals(sentence, other)) return 1;
 	}
 
 	return 0;
