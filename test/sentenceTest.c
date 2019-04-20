@@ -193,5 +193,6 @@ int main(int argc, char** argv)
 	_TEST_SET();
 	_TEST_SENTENCE_EQUALS();
 	_TEST_SENTENCESET_CONTAINS();
+	Sentence_parseString("",NULL);
 
 }
