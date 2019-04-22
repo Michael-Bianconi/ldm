@@ -27,4 +27,4 @@ that contains only that sentence.
 
 #Sentence Parsing
 
-![Parsing example](https://github.com/Michael-Bianconi/ldm/ldmParsing.png)
+![Parsing example](https://github.com/Michael-Bianconi/ldm/blob/master/ldmParsing.png)
