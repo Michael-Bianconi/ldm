@@ -98,7 +98,7 @@ static void _TEST_SET()
 	SentenceSet_add(set, comp1);
 	SentenceSet_add(set, comp2);
 	SentenceSet_add(set, atom3);
-	SentenceSet_print(set);
+	//SentenceSet_print(set);
 	SentenceSet_free(set);
 
 	printf("_TEST_SET() : SUCCESS\n");
@@ -183,6 +183,17 @@ static void _TEST_SENTENCESET_CONTAINS()
 	printf("_TEST_SENTENCESET_CONTAINS() : SUCCESS\n");
 }
 
+static void _TEST_SENTENCE_PARSE(char* in)
+{
+	SentenceSet set = SentenceSet_create();
+	Sentence_print(Sentence_parseString(in,&set));
+	printf("\n");
+	SentenceSet_print(set);
+	SentenceSet_free(set);
+
+	printf("_TEST_SENTENCE_PARSE() : SUCCESS\n");
+}
+
 int main(int argc, char** argv)
 {
 	(void) argc;
@@ -193,6 +204,5 @@ int main(int argc, char** argv)
 	_TEST_SET();
 	_TEST_SENTENCE_EQUALS();
 	_TEST_SENTENCESET_CONTAINS();
-	Sentence_parseString(argv[1],NULL);
-
+	_TEST_SENTENCE_PARSE(argv[1]);
 }

@@ -208,7 +208,7 @@ void Sentence_print(const Sentence sentence);
  * @param set Set buffer, should be NULL or uninitialized.
  * @return Returns the <i>root</i> sentence.
  */
-Sentence Sentence_parseString(const char* in, SentenceSet* set);
+Sentence Sentence_parseString(char* in, SentenceSet* set);
 
 /**
  * Prints every sentence in the set.
