@@ -196,8 +196,12 @@ static void _TEST_SENTENCE_PARSE(char* in)
 
 int main(int argc, char** argv)
 {
-	(void) argc;
-	(void) argv;
+	if (argc != 2)
+	{
+		printf("Usage: $ ./test <sentence>\n");
+		return 1;
+	}
+	
 	_TEST_CREATE_ATOMIC();
 	_TEST_CREATE_COMPOUND();
 	_TEST_BIG_COMPOUND();
