@@ -9,12 +9,14 @@ inner sentences, connected by an operator.
 
 # Operators
 
-\~ - negation (not)
-& - conjunction (and)
-v - disjunction (or)
-\> - material conditional (if/then)
-= - material biconditional (equivilance)
-
+| Name | Description | Symbol |
+|:----:|:-----------:|:------:|
+|Negation|NOT P|\~|
+|Conjunction|P AND Q|&|
+|Disjunction|P OR Q|v|
+|Material Conditional|If P then Q|>|
+|Material Biconditional|If and only if P then Q|=|
+ 
 # Sentence Sets
 
 Since sentences are essentially graphs with interconnected nodes,
