@@ -24,3 +24,7 @@ is that if `(A & B) v (C & D)` is assumed, then `(A & B) v (C & B)`,
 `(A & B)` nor `(C & D)` can be assumed to be true. In this case, it
 would be wise to copy `(A & B) v (C & B)` into an "assumption" set
 that contains only that sentence.
+
+#Sentence Parsing
+
+![Parsing example](https://github.com/Michael-Bianconi/ldm/ldmParsing.png)
