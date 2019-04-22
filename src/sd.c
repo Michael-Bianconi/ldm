@@ -16,17 +16,17 @@
 uint8_t SD_canEliminateConditional(const Sentence sent, const SentenceSet set)
 {
 	// Sentence must be a conditional
-	if (sentence->op != MATERIAL_CONDITIONAL
-		&& sentence->op != MATERIAL_BICONDITIONAL)
+	if (sent->op != MATERIAL_CONDITIONAL
+		&& sent->op != MATERIAL_BICONDITIONAL)
 			return 0;
 
 	// Check antecedent
-	if (SentenceSet_contains(sent->left.sentence))
+	if (SentenceSet_contains(set, sent->left.sentence))
 		return 1;
 
 	// If conditional, check consequent as well
-	if (sentence->op == MATERIAL_BICONDITIONAL
-		&& SentenceSet_contains(sent->left.sentence))
+	if (sent->op == MATERIAL_BICONDITIONAL
+		&& SentenceSet_contains(set, sent->left.sentence))
 			return 1;
 
 	// Conditional cannot be eliminated

@@ -41,3 +41,5 @@ uint8_t SD_canEliminateConditional(const Sentence sent, const SentenceSet set);
  * @param destination Set to add to.
  */
 void SD_eliminateConjunction(const Sentence source, SentenceSet destination);
+
+#endif
