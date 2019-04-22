@@ -11,12 +11,12 @@ inner sentences, connected by an operator.
 
 | Name | Description | Symbol |
 |:----:|:-----------:|:------:|
-|Negation|NOT P|\~|
-|Conjunction|P AND Q|&|
-|Disjunction|P OR Q|v|
-|Material Conditional|If P then Q|>|
-|Material Biconditional|If and only if P then Q|=|
- 
+|Negation|not P|\~|
+|Conjunction|P and Q|&|
+|Disjunction|P or Q|v|
+|Material Conditional|if P then Q|>|
+|Material Biconditional|if and only if P then Q|=|
+
 # Sentence Sets
 
 Since sentences are essentially graphs with interconnected nodes,
